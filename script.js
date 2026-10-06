@@ -190,10 +190,31 @@
    6. ENQUIRY FORM — VALIDATION & WHATSAPP REDIRECT
    ============================================================ */
 (function initEnquiryForm() {
-  const form = document.getElementById('enquiry-form');
+  var form = document.getElementById('enquiry-form');
   if (!form) return;
 
-  const WA_NUMBER = '919897497767'; // country code + number, no + or spaces
+  var WA_NUMBER = '919897497767'; // country code + number, no + or spaces
+
+  // --- Reset the form to a completely blank state ---
+  // Called on page load and after every WhatsApp redirect.
+  // This prevents the browser's own session-restore / back-forward cache
+  // from making the form appear pre-filled or "already submitted".
+  // Nothing is read from or written to localStorage, sessionStorage, or cookies.
+  function resetForm() {
+    form.reset();
+
+    // Clear all inline error messages and error highlight styling
+    form.querySelectorAll('.form-error-msg').forEach(function (el) {
+      el.textContent = '';
+      el.classList.remove('visible');
+    });
+    form.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(function (el) {
+      el.classList.remove('error');
+    });
+  }
+
+  // Always start with a blank form on every page load / refresh
+  resetForm();
 
   // Helper: show/hide inline error
   function setError(inputEl, msgEl, show, message) {
@@ -211,15 +232,15 @@
 
   // Helper: get selected radio card value
   function getRadioValue(name) {
-    const checked = form.querySelector('input[name="' + name + '"]:checked');
+    var checked = form.querySelector('input[name="' + name + '"]:checked');
     return checked ? checked.value : '';
   }
 
   // Clear error on user interaction
   function attachClearError(inputEl, msgEl) {
     if (!inputEl) return;
-    var event = inputEl.tagName === 'SELECT' ? 'change' : 'input';
-    inputEl.addEventListener(event, function () {
+    var eventName = inputEl.tagName === 'SELECT' ? 'change' : 'input';
+    inputEl.addEventListener(eventName, function () {
       setError(inputEl, msgEl, false);
     });
   }
@@ -319,18 +340,22 @@
     var encoded = encodeURIComponent(waMessage);
     var waURL = 'https://wa.me/' + WA_NUMBER + '?text=' + encoded;
 
+    // Open WhatsApp in a new tab, then immediately reset the form.
+    // The form is now blank and ready for the next enquiry on any device.
+    // No submission state is stored anywhere.
     window.open(waURL, '_blank', 'noopener,noreferrer');
+    resetForm();
   });
 
   // Clear vehicle/finance radio errors on selection
-  document.querySelectorAll('input[name="vehicle"]').forEach(function (radio) {
+  form.querySelectorAll('input[name="vehicle"]').forEach(function (radio) {
     radio.addEventListener('change', function () {
       var err = document.getElementById('f-vehicle-error');
       if (err) err.classList.remove('visible');
     });
   });
 
-  document.querySelectorAll('input[name="finance"]').forEach(function (radio) {
+  form.querySelectorAll('input[name="finance"]').forEach(function (radio) {
     radio.addEventListener('change', function () {
       var err = document.getElementById('f-finance-error');
       if (err) err.classList.remove('visible');
