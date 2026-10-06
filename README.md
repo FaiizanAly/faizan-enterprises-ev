@@ -3,7 +3,6 @@
 A modern informational website for **FAIZAN ENTERPRISES**, an electric mobility dealership established in **2017** in Senthal, Bareilly, Uttar Pradesh.
 
 ---
-🌐 **[LIVE WEBSITE](https://faizanenterprises.vercel.app/)**
 
 ## ✨ Features
 
