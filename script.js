@@ -394,3 +394,235 @@
 
   window.addEventListener('scroll', updateActiveLink, { passive: true });
 })();
+
+
+/* ============================================================
+   8. SCOOTERS AT A GLANCE — CONTINUOUS CAROUSEL & LIGHTBOX MODAL
+   ============================================================ */
+(function initScooterCarouselAndModal() {
+  const carousel = document.getElementById('scooter-carousel');
+  const track = document.getElementById('scooter-track');
+  const modal = document.getElementById('scooter-modal');
+  const modalImg = document.getElementById('scooter-modal-img');
+  const modalClose = document.getElementById('scooter-modal-close');
+  const modalBackdrop = document.getElementById('scooter-modal-backdrop');
+
+  if (!carousel || !track) return;
+
+  // Check prefers-reduced-motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  let currentTranslate = 0;
+  const speed = 0.55; // pixels per frame (smooth, calm, premium pace)
+  let isPaused = false;
+  let isDragging = false;
+  let startX = 0;
+  let dragDistance = 0;
+  let prevTranslate = 0;
+  let animationFrameId = null;
+  let lastTimestamp = 0;
+  let lastFocusedElement = null;
+
+  // Calculate half track width (width of original 8 items + gaps)
+  function getHalfTrackWidth() {
+    return track.scrollWidth / 2;
+  }
+
+  // Position track correctly ensuring seamless wrap
+  function setPosition(x) {
+    const halfWidth = getHalfTrackWidth();
+    if (halfWidth <= 0) return;
+
+    // Modulo wrap: currentTranslate is negative as it moves right-to-left
+    while (x <= -halfWidth) {
+      x += halfWidth;
+    }
+    while (x > 0) {
+      x -= halfWidth;
+    }
+
+    currentTranslate = x;
+    track.style.transform = 'translate3d(' + currentTranslate.toFixed(2) + 'px, 0, 0)';
+  }
+
+  // Animation loop
+  function animate(timestamp) {
+    if (!lastTimestamp) lastTimestamp = timestamp;
+    const delta = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+
+    if (!isPaused && !isDragging && !prefersReducedMotion.matches) {
+      // Normalize speed based on 60fps (~16.67ms)
+      const factor = Math.min(delta / 16.67, 3);
+      currentTranslate -= speed * factor;
+      setPosition(currentTranslate);
+    }
+
+    if (!prefersReducedMotion.matches) {
+      animationFrameId = requestAnimationFrame(animate);
+    }
+  }
+
+  // Start animation loop if motion is allowed
+  if (!prefersReducedMotion.matches) {
+    animationFrameId = requestAnimationFrame(animate);
+  }
+
+  // Listen for reduced motion change
+  prefersReducedMotion.addEventListener('change', function (e) {
+    if (e.matches) {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      track.style.transform = 'none';
+    } else {
+      lastTimestamp = 0;
+      animationFrameId = requestAnimationFrame(animate);
+    }
+  });
+
+  // Desktop hover pause
+  carousel.addEventListener('mouseenter', function () {
+    isPaused = true;
+  });
+
+  carousel.addEventListener('mouseleave', function () {
+    if (!isDragging) {
+      isPaused = false;
+    }
+  });
+
+  // Keyboard focus pause (accessibility)
+  carousel.addEventListener('focusin', function () {
+    isPaused = true;
+  });
+
+  carousel.addEventListener('focusout', function (e) {
+    if (!carousel.contains(e.relatedTarget) && !isDragging) {
+      isPaused = false;
+    }
+  });
+
+  // Drag & Touch support
+  function onPointerDown(e) {
+    if (prefersReducedMotion.matches) return;
+    // Primary mouse button or touch
+    if (e.button !== undefined && e.button !== 0) return;
+
+    isDragging = true;
+    isPaused = true;
+    startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+    dragDistance = 0;
+    prevTranslate = currentTranslate;
+    carousel.style.cursor = 'grabbing';
+  }
+
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    const currentX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+    const diff = currentX - startX;
+    dragDistance = Math.abs(diff);
+
+    setPosition(prevTranslate + diff);
+  }
+
+  function onPointerUp() {
+    if (!isDragging) return;
+    isDragging = false;
+    carousel.style.cursor = '';
+
+    // If mouse is not hovering anymore, resume
+    setTimeout(function () {
+      if (!carousel.matches(':hover') && !carousel.contains(document.activeElement)) {
+        isPaused = false;
+      }
+    }, 50);
+  }
+
+  // Touch event listeners
+  carousel.addEventListener('touchstart', onPointerDown, { passive: true });
+  window.addEventListener('touchmove', onPointerMove, { passive: true });
+  window.addEventListener('touchend', onPointerUp, { passive: true });
+  window.addEventListener('touchcancel', onPointerUp, { passive: true });
+
+  // Mouse drag event listeners
+  carousel.addEventListener('mousedown', onPointerDown);
+  window.addEventListener('mousemove', onPointerMove);
+  window.addEventListener('mouseup', onPointerUp);
+
+  // ============================================================
+  // LIGHTBOX MODAL LOGIC
+  // ============================================================
+  function openModal(src, alt) {
+    if (!modal || !modalImg) return;
+
+    lastFocusedElement = document.activeElement;
+    isPaused = true; // Pause carousel while modal is open
+
+    modalImg.src = src;
+    modalImg.alt = alt || 'Electric scooter';
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+
+    // Prevent body scroll behind modal
+    document.body.style.overflow = 'hidden';
+
+    // Focus close button for accessibility
+    if (modalClose) {
+      modalClose.focus();
+    }
+  }
+
+  function closeModal() {
+    if (!modal) return;
+
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    if (modalImg) modalImg.src = '';
+
+    // Restore body scroll
+    document.body.style.overflow = '';
+
+    // Resume carousel if not hovered
+    if (!carousel.matches(':hover')) {
+      isPaused = false;
+    }
+
+    // Restore focus to last clicked element
+    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+      lastFocusedElement.focus();
+    }
+  }
+
+  // Attach click to view on photo buttons
+  const photoBtns = track.querySelectorAll('.showroom-photo-btn');
+  photoBtns.forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      // If user was dragging significantly, don't trigger modal click
+      if (dragDistance > 6) {
+        e.preventDefault();
+        return;
+      }
+
+      const fullSrc = btn.getAttribute('data-full');
+      const altText = btn.getAttribute('data-alt');
+      if (fullSrc) {
+        openModal(fullSrc, altText);
+      }
+    });
+  });
+
+  // Modal close handlers
+  if (modalClose) {
+    modalClose.addEventListener('click', closeModal);
+  }
+
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener('click', closeModal);
+  }
+
+  // Keyboard navigation: Escape key closes modal
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+})();
