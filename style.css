@@ -243,15 +243,16 @@ p {
 }
 
 .navbar-inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
 }
 
 .navbar-logo {
   display: flex;
   align-items: center;
+  justify-self: start;
   flex-shrink: 0;
 }
 
@@ -261,19 +262,25 @@ p {
   object-fit: contain;
 }
 
+/* Centered navigation links */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .nav-links a {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--text-primary);
-  padding: 8px 14px;
+  padding: 8px 13px;
   border-radius: var(--radius-full);
   transition: var(--transition);
+  white-space: nowrap;
 }
 
 .nav-links a:hover {
@@ -286,14 +293,32 @@ p {
   font-weight: 600;
 }
 
+/* Right Action CTA Container */
+.navbar-action {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+}
+
 .nav-cta {
-  background: var(--red) !important;
-  color: var(--white) !important;
-  padding: 10px 20px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  transition: var(--transition);
+  white-space: nowrap;
+  background: var(--red);
+  color: var(--white);
+  padding: 10px 22px;
 }
 
 .nav-cta:hover {
-  background: var(--red-dark) !important;
+  background: var(--red-dark);
+  color: var(--white);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(200, 29, 37, 0.25);
 }
 
 /* Hamburger */
@@ -2250,6 +2275,24 @@ p {
   .hero-content {
     max-width: 100%;
   }
+
+  .navbar-inner {
+    gap: 16px;
+  }
+
+  .nav-links {
+    gap: 4px;
+  }
+
+  .nav-links a {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+  }
+
+  .nav-cta {
+    padding: 8px 18px;
+    font-size: 0.82rem;
+  }
 }
 
 /* Large mobile / small tablet — <= 768px */
@@ -2259,7 +2302,13 @@ p {
     --container-px: 20px;
   }
 
-  .nav-links {
+  .navbar-inner {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .nav-links,
+  .navbar-action {
     display: none;
   }
 
