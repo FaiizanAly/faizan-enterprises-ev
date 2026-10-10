@@ -627,9 +627,8 @@ p {
 
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
+  grid-template-columns: 1fr;
+  gap: 52px;
 }
 
 .about-image-wrap {
@@ -637,14 +636,18 @@ p {
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: linear-gradient(135deg, #f0f0ee 0%, #e8e8e5 100%);
-  aspect-ratio: 4/5;
+  /* Landscape 16:9 container for the showroom photograph */
+  aspect-ratio: 16 / 9;
+  max-height: 560px;
 }
 
 .about-image-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 30%;
   border-radius: var(--radius-lg);
+  display: block;
 }
 
 /* Fallback shown when image missing */
@@ -1847,14 +1850,10 @@ p {
     border-right: none;
   }
 
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 48px;
-  }
 
   .about-image-wrap {
-    aspect-ratio: 16/9;
-    max-height: 400px;
+    aspect-ratio: 4 / 3;
+    max-height: 320px;
   }
 
   .mobility-intro {
