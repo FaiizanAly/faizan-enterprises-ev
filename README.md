@@ -1,22 +1,26 @@
 # 🏢 FAIZAN ENTERPRISES
 
-A modern informational website for **FAIZAN ENTERPRISES**, an electric mobility dealership established in **2017** in Senthal, Bareilly, Uttar Pradesh.
+A modern, responsive website for **FAIZAN ENTERPRISES**, an electric mobility dealership established in **2017** in Senthal, Bareilly, Uttar Pradesh.
 
 ---
+
 🌐 **[LIVE WEBSITE](https://faizanenterprises.vercel.app/)**
 
 ## ✨ Features
 
-- ⚡ Electric Scooters & E-Rickshaw information
+- ⚡ Electric Scooters & E-Rickshaw showcase
+- 🛵 Animated scooter carousel with full-image preview
+- 🏢 Showroom photography and visual showcase
 - 🏷️ Available vehicle brands
 - 💰 Finance information (Akasa Finance)
 - 🔧 Service, Repair & Spare Parts
-- 📸 Customer Delivery / Instagram section
+- 📸 Customer Deliveries and Instagram links
 - 📍 Dedicated Location page with Google Maps
 - 💬 WhatsApp enquiry form
-- 📱 Fully responsive design
-- 🎬 Smooth premium animations
-- 🌐 Light-mode premium UI
+- 📱 Responsive desktop and mobile layouts
+- 🎬 Smooth animations and interactions
+- 🎨 Premium, minimal light-mode design
+- 🧭 Centered navigation with a dedicated Enquire button
 
 ---
 
@@ -26,7 +30,7 @@ A modern informational website for **FAIZAN ENTERPRISES**, an electric mobility 
 - CSS3
 - Vanilla JavaScript
 
-No frameworks. No libraries. No build tools.
+No frameworks, libraries, or build tools required.
 
 ---
 
@@ -40,26 +44,33 @@ FAIZAN-ENTERPRISES/
 ├── script.js
 └── assets/
     ├── fe_logo.png
-    └── about-placeholder.jpg  ← replace with real image when ready
+    ├── Home-BG.png
+    ├── about-placeholder.jpg
+    ├── 1.jpg
+    ├── 2.jpg
+    ├── ...
+    └── Scooter and showroom images
 ```
+
+*Note: The structure above is illustrative. Actual filenames may vary depending on the images present in the repository.*
 
 ---
 
 ## 🚀 Run Locally
 
-1. 📥 Download or clone the repository
-2. 📂 Open the project folder
-3. 🌐 Open `index.html` in any browser
+1. 📥 Download or clone the repository.
+2. 📂 Open the project folder.
+3. 🌐 Open `index.html` in a browser.
 
-No installation or setup required.
+No installation or build process required.
 
 ---
 
 ## 🔒 Privacy
 
-- No backend or database is used
-- The enquiry form collects input on the client side and redirects to WhatsApp
-- No customer data is stored or sent to any server
+- No backend or database is used.
+- The enquiry form redirects users to WhatsApp.
+- The website does not maintain a shared submission status across devices.
 
 ---
 
@@ -75,9 +86,10 @@ Bareilly, Uttar Pradesh – 243407
 
 ## 🔗 Links
 
+- 🌐 [Live Website](https://faizanenterprises.vercel.app/)
 - 📸 Instagram — [@muzaffarali.fe](https://www.instagram.com/muzaffarali.fe)
 - 📸 Instagram — [@faiizanaly](https://www.instagram.com/faiizanaly)
-- 📍 Location — [View on Google Maps](https://maps.app.goo.gl/ru4nz7FMrb4rqbnG7)
+- 📍 [View on Google Maps](https://maps.app.goo.gl/ru4nz7FMrb4rqbnG7)
 
 ---
 
